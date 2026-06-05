@@ -43,8 +43,11 @@ def load_data():
     df       = pd.read_csv("data_processed/hotspot_jambi_clean.csv")
     df_bulan = pd.read_csv("data_processed/hotspot_per_bulan.csv")
     df_tahun = pd.read_csv("data_processed/hotspot_per_tahun.csv")
-    df_kluster = pd.read_csv("data_processed/cluster_summary.csv")
+    df_kluster = pd.read_csv("data_processed/cluster_summary2.csv")
     df['acq_date'] = pd.to_datetime(df['acq_date'])
+    # Merge nama daerah ke df utama
+    df = df.merge(df_kluster[['cluster','nama_daerah']], on='cluster', how='left')
+    df['nama_daerah'] = df['nama_daerah'].fillna('Noise/Outlier')
     return df, df_bulan, df_tahun, df_kluster
 
 df, df_bulan, df_tahun, df_kluster = load_data()
@@ -153,9 +156,9 @@ with col_map:
                     fill=True,
                     fill_opacity=0.7,
                     popup=folium.Popup(
-                        f"<b>📍 Lokasi:</b> {row['latitude']:.4f}, {row['longitude']:.4f}<br>"
+                        f"<b>📍 Daerah:</b> {row['nama_daerah']}<br>"
+                        f"<b>🔢 Kluster:</b> {label}<br>"
                         f"<b>📅 Tanggal:</b> {row['acq_date'].date()}<br>"
-                        f"<b>🌡️ Brightness:</b> {row['brightness']} K<br>"
                         f"<b>⚡ FRP:</b> {row['frp']} MW<br>"
                         f"<b>✅ Confidence:</b> {row['confidence']}%",
                         max_width=200
