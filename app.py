@@ -157,8 +157,9 @@ with col_map:
                     fill_opacity=0.7,
                     popup=folium.Popup(
                         f"<b>📍 Daerah:</b> {row['nama_daerah']}<br>"
-                        f"<b>🔢 Kluster:</b> {label}<br>"
+                        f"<b>🔢 Kluster:</b> {row['cluster_label']}<br>"
                         f"<b>📅 Tanggal:</b> {row['acq_date'].date()}<br>"
+                        f"<b>🌡️ Brightness:</b> {row['brightness']} K<br>"
                         f"<b>⚡ FRP:</b> {row['frp']} MW<br>"
                         f"<b>✅ Confidence:</b> {row['confidence']}%",
                         max_width=200
