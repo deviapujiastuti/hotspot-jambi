@@ -262,13 +262,15 @@ col_a, col_b = st.columns(2)
 with col_a:
     top10 = df_kluster.nlargest(10, 'jumlah_titik').copy()
     top10['cluster'] = top10['cluster'].astype(str)
+    top10['nama_daerah'] = top10['nama_daerah'].fillna('Tidak diketahui')
     fig_cluster = px.bar(
         top10,
-        x='cluster', y='jumlah_titik',
+        x='nama_daerah', y='jumlah_titik',
         color='avg_frp',
         color_continuous_scale='YlOrRd',
         title='Top 10 Kluster Terbesar',
-        labels={'cluster': 'ID Kluster', 'jumlah_titik': 'Jumlah Titik', 'avg_frp': 'Avg FRP (MW)'}
+        labels={'nama_daerah': 'Daerah', 'jumlah_titik': 'Jumlah Titik', 'avg_frp': 'Avg FRP (MW)'},
+        hover_data=['cluster']
     )
     fig_cluster.update_layout(
         plot_bgcolor='rgba(0,0,0,0)',
