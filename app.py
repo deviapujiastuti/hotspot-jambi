@@ -188,11 +188,12 @@ with col_map:
                     fill=True,
                     fill_opacity=0.6,
                     popup=folium.Popup(
-                        f"<b>Kluster:</b> {label}<br>"
+                        f"<b>📍 Daerah:</b> {row['nama_daerah']}<br>"
+                        f"<b>🔢 Kluster:</b> {label}<br>"
                         f"<b>📅 Tanggal:</b> {row['acq_date'].date()}<br>"
                         f"<b>⚡ FRP:</b> {row['frp']} MW<br>"
                         f"<b>✅ Confidence:</b> {row['confidence']}%",
-                        max_width=180
+                        max_width=200
                     )
                 ).add_to(m)
 
