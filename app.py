@@ -306,7 +306,7 @@ with st.expander("📄 Lihat Data Mentah (sample 500 baris)"):
         df_f.sample(min(500, len(df_f)), random_state=42)[[
             'acq_date','latitude','longitude',
             'brightness','frp','confidence',
-            'year','month_name','cluster_label'
+            'year','month_name','cluster_label','nama_daerah'
         ]].sort_values('acq_date'),
         use_container_width=True
     )
