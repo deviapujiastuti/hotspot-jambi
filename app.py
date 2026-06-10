@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -7,6 +6,7 @@ from folium.plugins import HeatMap, MarkerCluster
 from streamlit_folium import st_folium
 import plotly.express as px
 import plotly.graph_objects as go
+
 
 st.set_page_config(
     page_title="Hotspot Jambi 2018–2023",
@@ -43,7 +43,7 @@ def load_data():
     df       = pd.read_csv("data_processed/hotspot_jambi_clean.csv")
     df_bulan = pd.read_csv("data_processed/hotspot_per_bulan.csv")
     df_tahun = pd.read_csv("data_processed/hotspot_per_tahun.csv")
-    df_kluster = pd.read_csv("data_processed/cluster_summary2.csv")
+    df_kluster = pd.read_csv("data_processed/cluster_summary.csv")
     df['acq_date'] = pd.to_datetime(df['acq_date'])
     # Merge nama daerah ke df utama
     df = df.merge(df_kluster[['cluster','nama_daerah']], on='cluster', how='left')
