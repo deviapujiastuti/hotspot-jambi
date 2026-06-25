@@ -16,7 +16,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ==================== ADVANCED STYLING ====================
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
@@ -47,7 +46,6 @@ html, body, [class*="css"] {
     padding-right: 2rem !important;
 }
 
-/* ==================== HERO SECTION ====================*/
 .hero-wrap {
     background: linear-gradient(135deg, 
         rgba(255,69,0,0.15) 0%, 
@@ -145,7 +143,6 @@ html, body, [class*="css"] {
     font-weight: 600;
 }
 
-/* ==================== METRIC CARDS ====================*/
 .metric-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -241,7 +238,6 @@ html, body, [class*="css"] {
     font-weight: 600;
 }
 
-/* ==================== SECTION HEADERS ====================*/
 .section-header {
     display: flex;
     align-items: center;
@@ -290,7 +286,6 @@ html, body, [class*="css"] {
     letter-spacing: -0.01em;
 }
 
-/* ==================== SIDEBAR ====================*/
 [data-testid="stSidebar"] {
     background: linear-gradient(180deg, #0d0d1a 0%, #0a0a12 100%) !important;
     border-right: 2px solid rgba(255,69,0,0.15) !important;
@@ -390,7 +385,6 @@ html, body, [class*="css"] {
     font-weight: 700;
 }
 
-/* ==================== CHARTS & MAPS ====================*/
 .map-container {
     background: linear-gradient(135deg, 
         rgba(255,69,0,0.05) 0%, 
@@ -408,7 +402,6 @@ html, body, [class*="css"] {
     overflow: hidden !important;
 }
 
-/* ==================== DIVIDERS ====================*/
 .custom-divider {
     height: 2px;
     background: linear-gradient(90deg, 
@@ -418,7 +411,6 @@ html, body, [class*="css"] {
     margin: 2.5rem 0;
 }
 
-/* ==================== DATA TABLE ====================*/
 .dbscan-table {
     width: 100%;
     border-collapse: collapse;
@@ -463,7 +455,6 @@ html, body, [class*="css"] {
     letter-spacing: 0.05em;
 }
 
-/* ==================== FOOTER ====================*/
 .footer-wrap {
     text-align: center;
     padding: 1.5rem;
@@ -485,7 +476,6 @@ html, body, [class*="css"] {
     font-weight: 700;
 }
 
-/* ==================== STAT ROW ====================*/
 .stat-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -528,7 +518,6 @@ html, body, [class*="css"] {
     font-weight: 600;
 }
 
-/* ==================== EXPANDER ====================*/
 .streamlit-expanderHeader {
     background: linear-gradient(135deg, 
         rgba(255,69,0,0.08) 0%, 
@@ -541,7 +530,6 @@ html, body, [class*="css"] {
     border-color: rgba(255,69,0,0.3) !important;
 }
 
-/* ==================== LOADING ANIMATION ====================*/
 @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
@@ -551,7 +539,6 @@ html, body, [class*="css"] {
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* ==================== RESPONSIVE ====================*/
 @media (max-width: 768px) {
     .hero-title { font-size: 1.8rem; }
     .metric-grid { grid-template-columns: repeat(2, 1fr); }
@@ -561,7 +548,6 @@ html, body, [class*="css"] {
 </style>
 """, unsafe_allow_html=True)
 
-# ==================== LOAD DATA ====================
 @st.cache_data
 def load_data():
     df         = pd.read_csv("data_processed/hotspot_jambi_clean.csv")
@@ -575,7 +561,6 @@ def load_data():
 
 df, df_bulan, df_tahun, df_kluster = load_data()
 
-# ==================== SIDEBAR ====================
 with st.sidebar:
     st.markdown("""
     <div class="sidebar-brand">
@@ -628,14 +613,13 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-# ==================== FILTER DATA ====================
 df_f = df[
     (df['year'].isin(tahun_pilih)) &
     (df['month_name'].isin(bulan_pilih)) &
     (df['confidence'] >= min_conf)
 ]
 
-# ==================== HERO SECTION ====================
+
 st.markdown("""
 <div class="hero-wrap">
     <div class="hero-badge">🛰️ NASA FIRMS · MODIS C6.1 · Provinsi Jambi</div>
@@ -648,7 +632,6 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ==================== METRICS ====================
 if len(df_f) > 0:
     avg_br  = f"{df_f['brightness'].mean():.1f} K"
     avg_frp = f"{df_f['frp'].mean():.1f} MW"
@@ -685,7 +668,6 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# ==================== MAIN CONTENT ====================
 col_map, col_chart = st.columns([3, 2], gap="medium")
 
 with col_map:
@@ -984,10 +966,8 @@ with col_chart:
     else:
         st.info("📊 Tidak ada data temporal untuk ditampilkan")
 
-# ==================== DIVIDER ====================
 st.markdown('<div class="custom-divider"></div>', unsafe_allow_html=True)
 
-# ==================== DBSCAN ANALYSIS ====================
 st.markdown("""
 <div class="section-header">
     <div class="section-icon">🤖</div>
@@ -1116,10 +1096,8 @@ with col_b:
         </div>
         """, unsafe_allow_html=True)
 
-# ==================== DIVIDER ====================
 st.markdown('<div class="custom-divider"></div>', unsafe_allow_html=True)
 
-# ==================== DATA EXPLORER ====================
 with st.expander("📄 **Eksplorasi Data Mentah** (sample 500 baris terbaru)", expanded=False):
     if len(df_f) > 0:
         sample_data = df_f.sample(min(500, len(df_f)), random_state=42)[[
@@ -1149,7 +1127,6 @@ with st.expander("📄 **Eksplorasi Data Mentah** (sample 500 baris terbaru)", e
     else:
         st.info("📊 Tidak ada data untuk ditampilkan dengan filter yang dipilih")
 
-# ==================== FOOTER ====================
 st.markdown("""
 <div class="footer-wrap">
     <span>
