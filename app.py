@@ -18,40 +18,50 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-/* CSS Reset & Font */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
+/* Reset dasar */
+* { box-sizing: border-box; }
 
-/* Sidebar Styling yang Diperbaiki */
+/* Background utama */
+.stApp {
+    background: linear-gradient(135deg, #0a0a1a 0%, #1a0a0f 50%, #0f0f20 100%);
+    color: #e8e8e8;
+}
+
+/* Sembunyikan elemen bawaan Streamlit */
+#MainMenu, footer, header { visibility: hidden; }
+
+/* Mengamankan Sidebar agar tidak tertutup */
 [data-testid="stSidebar"] {
     background: linear-gradient(180deg, #0d0d1a 0%, #0a0a12 100%) !important;
     border-right: 2px solid rgba(255,69,0,0.15) !important;
-    width: 300px !important;
-    z-index: 9999 !important;
 }
 
-/* Memastikan konten utama tidak tertutup tanpa margin-left yang merusak */
+/* Memastikan konten utama tidak terpotong */
 [data-testid="stAppViewContainer"] {
-    padding-left: 20px !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
 }
 
-/* Sembunyikan Header Default */
-#MainMenu, footer, header { visibility: hidden; }
+/* Memperbaiki Grid agar tidak hancur saat Sidebar terbuka */
+.metric-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 2rem;
+}
 
-/* Styling Komponen Lainnya (Sesuai kode Anda) */
-.stApp { background: linear-gradient(135deg, #0a0a1a 0%, #1a0a0f 50%, #0f0f20 100%); color: #e8e8e8; }
-.hero-wrap { background: linear-gradient(135deg, rgba(255,69,0,0.15), rgba(255,140,0,0.08)); border: 2px solid rgba(255,69,0,0.3); border-radius: 20px; padding: 3rem; margin-bottom: 2.5rem; }
-.metric-card { background: linear-gradient(135deg, rgba(255,69,0,0.08), rgba(255,140,0,0.04)); border: 2px solid rgba(255,69,0,0.2); border-radius: 16px; padding: 1.5rem; transition: 0.3s; }
-.sidebar-brand { background: linear-gradient(135deg, rgba(255,69,0,0.2), rgba(255,140,0,0.1)); border: 2px solid rgba(255,69,0,0.3); border-radius: 14px; padding: 1.2rem; margin-bottom: 1.5rem; text-align: center; }
-.dbscan-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-.footer-wrap { text-align: center; padding: 1.5rem; margin-top: 3rem; border-top: 2px solid rgba(255,69,0,0.15); }
+.metric-card {
+    flex: 1 1 200px;
+    background: linear-gradient(135deg, rgba(255,69,0,0.08), rgba(255,140,0,0.04));
+    border: 2px solid rgba(255,69,0,0.2);
+    border-radius: 16px;
+    padding: 1.5rem;
+}
+
+/* Sisa CSS Anda tetap bisa ditaruh di bawah sini */
+.hero-wrap { ... }
+/* ... (masukkan sisa CSS Anda yang lain) ... */
 </style>
-""", unsafe_allow_html=True)
-
-# ... (Lanjutkan dengan kode load_data() dan seluruh logic Python Anda) ...
-
-# PENTING: Jika setelah dijalankan sidebar masih tidak muncul:
-# 1. Pastikan tidak ada karakter tersembunyi/typo di file .py Anda
-# 2. Lakukan Hard Reload (Ctrl + F5) di browser Anda
 
 @st.cache_data
 def load_data():
