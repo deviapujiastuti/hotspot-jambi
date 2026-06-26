@@ -289,8 +289,13 @@ html, body, [class*="css"] {
 [data-testid="stSidebar"] {
     background: linear-gradient(180deg, #0d0d1a 0%, #0a0a12 100%) !important;
     border-right: 2px solid rgba(255,69,0,0.15) !important;
+    width: 300px !important;
+    z-index: 9999 !important;
 }
 
+[data-testid="stAppViewContainer"] {
+        margin-left: 300px !important;
+}
 [data-testid="stSidebar"] .stMarkdown h2,
 [data-testid="stSidebar"] .stMarkdown p {
     color: #e8e8e8 !important;
