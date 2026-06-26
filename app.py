@@ -286,9 +286,14 @@ html, body, [class*="css"] {
     letter-spacing: -0.01em;
 }
 
-[data-testid="stSidebar"] {
+[data-testid="stSidebar"],
+section[data-testid="stSidebar"],
+.css-1d391kg,
+.css-fg4pbf {
     background: linear-gradient(180deg, #0d0d1a 0%, #0a0a12 100%) !important;
     border-right: 2px solid rgba(255,69,0,0.15) !important;
+    visibility: visible !important;
+    display: block !important;
 }
 
 [data-testid="stSidebar"] .stMarkdown h2,
