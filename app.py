@@ -76,36 +76,36 @@ html, body, [class*="css"] { font-family: 'Poppins', sans-serif; }
 }
 
 @media (max-width: 768px) {
+    .burger-btn { display: flex; }
+
     [data-testid="stSidebar"] {
-        position: relative !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: -320px !important;
+        width: 300px !important;
+        height: 100vh !important;
+        z-index: 99999 !important;
+        transition: left 0.3s cubic-bezier(0.4,0,0.2,1) !important;
+        overflow-y: auto !important;
+    }
+
+    [data-testid="stSidebar"].sidebar-open {
         left: 0 !important;
-        width: 100% !important;
-        height: auto !important;
-        min-height: unset !important;
-        z-index: 1 !important;
+        box-shadow: 4px 0 30px rgba(255,69,0,0.3) !important;
+    }
+
+    .mobile-overlay.overlay-open {
         display: block !important;
-        visibility: visible !important;
-        transform: none !important;
-    }
-
-    [data-testid="stSidebar"] > div:first-child {
-        width: 100% !important;
-        padding: 1rem !important;
-    }
-
-    [data-testid="stSidebarCollapsedControl"] {
-        display: none !important;
     }
 
     .block-container {
         padding-left: 1rem !important;
         padding-right: 1rem !important;
-        padding-top: 1rem !important;
+        padding-top: 3.5rem !important;
     }
 
     .hero-title { font-size: 1.6rem !important; }
     .metric-grid { grid-template-columns: repeat(2, 1fr) !important; }
-    .burger-btn { display: none !important; }
 }
 
 /* ── HERO ── */
