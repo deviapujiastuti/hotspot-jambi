@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -16,58 +17,28 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# --- CSS BLOCK ---
 st.markdown("""
 <style>
-/* Reset dasar */
-* { box-sizing: border-box; }
-
-/* Background utama */
-.stApp {
-    background: linear-gradient(135deg, #0a0a1a 0%, #1a0a0f 50%, #0f0f20 100%);
-    color: #e8e8e8;
-}
-
-/* Sembunyikan elemen bawaan Streamlit */
 #MainMenu, footer, header { visibility: hidden; }
-
-/* Mengamankan Sidebar agar tidak tertutup */
 [data-testid="stSidebar"] {
     background: linear-gradient(180deg, #0d0d1a 0%, #0a0a12 100%) !important;
     border-right: 2px solid rgba(255,69,0,0.15) !important;
 }
-
-/* Memastikan konten utama tidak terpotong */
-[data-testid="stAppViewContainer"] {
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
-}
-
-/* Memperbaiki Grid agar tidak hancur saat Sidebar terbuka */
-.metric-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 2rem;
-}
-
-.metric-card {
-    flex: 1 1 200px;
-    background: linear-gradient(135deg, rgba(255,69,0,0.08), rgba(255,140,0,0.04));
-    border: 2px solid rgba(255,69,0,0.2);
-    border-radius: 16px;
-    padding: 1.5rem;
-}
-
-/* Sisa CSS Anda tetap bisa ditaruh di bawah sini */
-.hero-wrap { ... }
-/* ... (masukkan sisa CSS Anda yang lain) ... */
+.stApp { background: linear-gradient(135deg, #0a0a1a 0%, #1a0a0f 50%, #0f0f20 100%); color: #e8e8e8; }
+.hero-wrap { background: linear-gradient(135deg, rgba(255,69,0,0.15), rgba(255,140,0,0.08)); border: 2px solid rgba(255,69,0,0.3); border-radius: 20px; padding: 3rem; margin-bottom: 2.5rem; }
+.metric-card { background: linear-gradient(135deg, rgba(255,69,0,0.08), rgba(255,140,0,0.04)); border: 2px solid rgba(255,69,0,0.2); border-radius: 16px; padding: 1.5rem; }
+.dbscan-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.footer-wrap { text-align: center; padding: 1.5rem; margin-top: 3rem; border-top: 2px solid rgba(255,69,0,0.15); }
 </style>
+""", unsafe_allow_html=True)
 
+# --- LOGIKA ANDA ---
 @st.cache_data
 def load_data():
-    df         = pd.read_csv("data_processed/hotspot_jambi_clean.csv")
-    df_bulan   = pd.read_csv("data_processed/hotspot_per_bulan.csv")
-    df_tahun   = pd.read_csv("data_processed/hotspot_per_tahun.csv")
+    df = pd.read_csv("data_processed/hotspot_jambi_clean.csv")
+    df_bulan = pd.read_csv("data_processed/hotspot_per_bulan.csv")
+    df_tahun = pd.read_csv("data_processed/hotspot_per_tahun.csv")
     df_kluster = pd.read_csv("data_processed/cluster_summary.csv")
     df['acq_date'] = pd.to_datetime(df['acq_date'])
     df = df.merge(df_kluster[['cluster', 'nama_daerah']], on='cluster', how='left')
@@ -77,81 +48,26 @@ def load_data():
 df, df_bulan, df_tahun, df_kluster = load_data()
 
 with st.sidebar:
-    st.markdown("""
-    <div class="sidebar-brand">
-        <div class="sidebar-brand-title">🔥 HOTSPOT JAMBI</div>
-        <div class="sidebar-brand-sub">🛰️ Spasio-Temporal Dashboard</div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("### 🗓️ Rentang Waktu")
+    st.markdown("### 🔥 HOTSPOT JAMBI")
+    st.markdown("🛰️ Spasio-Temporal Dashboard")
+    st.markdown("---")
     tahun_list  = sorted(df['year'].unique())
-    tahun_pilih = st.multiselect(
-        "Pilih Tahun",
-        options=tahun_list,
-        default=tahun_list,
-        label_visibility="collapsed"
-    )
+    tahun_pilih = st.multiselect("Pilih Tahun", options=tahun_list, default=tahun_list)
+    bulan_nama  = ['January','February','March','April','May','June','July','August','September','October','November','December']
+    bulan_pilih = st.multiselect("Pilih Bulan", options=bulan_nama, default=bulan_nama)
+    mode_peta = st.selectbox("Pilih Visualisasi Peta", ["🔥 Heatmap", "📍 Marker Kluster", "🎯 Kluster DBSCAN"])
+    min_conf = st.slider("Minimum Confidence (%)", 30, 100, 50)
 
-    st.markdown("### 📅 Bulan")
-    bulan_nama  = ['January','February','March','April','May','June',
-                   'July','August','September','October','November','December']
-    bulan_pilih = st.multiselect(
-        "Pilih Bulan",
-        options=bulan_nama,
-        default=bulan_nama,
-        label_visibility="collapsed"
-    )
+df_f = df[(df['year'].isin(tahun_pilih)) & (df['month_name'].isin(bulan_pilih)) & (df['confidence'] >= min_conf)]
 
-    st.markdown("### 🗺️ Mode Peta")
-    mode_peta = st.selectbox(
-        "Pilih Visualisasi Peta",
-        ["🔥 Heatmap", "📍 Marker Kluster", "🎯 Kluster DBSCAN"],
-        label_visibility="collapsed"
-    )
-
-    st.markdown("### 🎯 Confidence Level")
-    min_conf = st.slider(
-        "Minimum Confidence (%)",
-        30, 100, 50,
-        label_visibility="collapsed"
-    )
-
-    st.divider()
-
-    st.markdown("""
-    <div class="info-box">
-        <b>📡 Data Source:</b> NASA FIRMS MODIS C6.1<br><br>
-        <b>🤖 Metode:</b> DBSCAN Clustering<br><br>
-        <b>📍 Wilayah:</b> Provinsi Jambi<br><br>
-        <b>📆 Periode:</b> 2018 – 2023
-    </div>
-    """, unsafe_allow_html=True)
-
-df_f = df[
-    (df['year'].isin(tahun_pilih)) &
-    (df['month_name'].isin(bulan_pilih)) &
-    (df['confidence'] >= min_conf)
-]
-
-
-st.markdown("""
-<div class="hero-wrap">
-    <div class="hero-badge">🛰️ NASA FIRMS · MODIS C6.1 · Provinsi Jambi</div>
-    <div class="hero-title">Pemetaan <span>Spasio-Temporal</span><br>Hotspot Karhutla Jambi</div>
-    <p class="hero-sub">
-        Analisis pola sebaran dan konsentrasi titik panas kebakaran hutan dan lahan di Provinsi Jambi
-        periode <b>2018–2023</b> menggunakan teknologi machine learning <b>DBSCAN</b> dan visualisasi
-        interaktif real-time.
-    </p>
-</div>
-""", unsafe_allow_html=True)
+st.markdown('<div class="hero-wrap"><h1>Pemetaan Spasio-Temporal Hotspot Karhutla Jambi</h1></div>', unsafe_allow_html=True)
 
 if len(df_f) > 0:
-    avg_br  = f"{df_f['brightness'].mean():.1f} K"
-    avg_frp = f"{df_f['frp'].mean():.1f} MW"
-    pct_year = f"{(len(df_f) / len(df) * 100):.1f}%"
-    max_day = df_f.groupby('acq_date').size().max()
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Total Hotspot", f"{len(df_f):,}")
+    c2.metric("Avg Brightness", f"{df_f['brightness'].mean():.1f} K")
+    c3.metric("Avg FRP Power", f"{df_f['frp'].mean():.1f} MW")
+    c4.metric("Persentase Data", f"{(len(df_f) / len(df) * 100):.1f}%")
 else:
     avg_br  = "—"
     avg_frp = "—"
